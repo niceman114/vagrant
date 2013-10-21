@@ -1,0 +1,39 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+PROVISIONING_PATH = "../../provisioning/"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "Ubuntu64-12.04LTS"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :private_network, ip: "192.168.33.10"
+  # config.vm.network :public_network
+  # config.ssh.forward_agent = false
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.gui = false
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--cpus", "4"]
+    vb.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+  end
+  
+  config.vm.provision :shell, :path => PROVISIONING_PATH + "shell/ubuntu_init.sh"
+
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = PROVISIONING_PATH + "chef/cookbooks"
+    chef.add_recipe "mysql::server"
+    chef.add_recipe "apache2"
+    chef.add_recipe "php"
+    chef.json = {
+      :mysql => {
+        :server_root_password => "vagrant",
+        :server_repl_password => "vagrant",
+        :server_debian_password => "vagrant"
+      }
+    }
+  end
+end
