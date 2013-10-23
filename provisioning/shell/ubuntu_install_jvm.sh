@@ -2,7 +2,6 @@
 /vagrant/provisioning/shell/ubuntu_init.sh
 
 sudo -s
-
 cp /vagrant/provisioning/download/jdk-7u45-linux-i586.gz /tmp/
 cd /tmp
 mkdir -p /usr/local/jdk
@@ -16,6 +15,7 @@ update-alternatives --install /usr/bin/javac javac /usr/local/jdk/jdk1.7.0_45/bi
 update-alternatives --set javac /usr/local/jdk/jdk1.7.0_45/bin/javac
 
 echo -e "JAVA_HOME=/usr/local/jdk/jdk1.7.0_45
+CLASSPATH=$JAVA_HOME/lib
 PATH=\$PATH:\$JAVA_HOME/bin" > /etc/profile.d/jvm.sh
 
 exit
