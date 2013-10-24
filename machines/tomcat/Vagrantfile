@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANT_ROOT = "../../../vagrant"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "Ubuntu32-12.04LTS"
+  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+  config.vm.hostname = "tomcat"
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
+  config.vm.network :private_network, ip: "192.168.33.10", auto_correct: true
+  # config.vm.network :public_network
+  # config.ssh.forward_agent = false
+  config.vm.synced_folder VAGRANT_ROOT, "/vagrant"
+
+  config.vm.provision :shell, :path => VAGRANT_ROOT + "/provisioning/shell/ubuntu_install_tomcat.sh"
+
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = VAGRANT_ROOT + "/provisioning/chef/cookbooks"
+    chef.add_recipe "git"
+  end
+end
