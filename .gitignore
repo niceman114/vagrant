@@ -1,0 +1,5 @@
+provisioning/download/jdk-7u45-linux-i586.gz
+
+/machines/apm/.vagrant
+/machines/jvm/.vagrant
+/machines/tomcat/.vagrant
