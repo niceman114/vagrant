@@ -7,11 +7,20 @@ apt-get -y install rdate
 rdate -s time.bora.net
 
 # update system packages
-apt-get purge -y vim-tiny
+apt-get remove --purge -y vim-tiny
+apt-get autoremove
+apt-get autoclean
+
 apt-get update 
-apt-get install -y git
 apt-get install -y openssl
 apt-get install -y vim
+
+apt-get install -y git
+# adduser --system --home /home/git --shell /bin/sh --disabled-password --group git
+# su git
+# mkdir .ssh
+# chmod 700 .ssh
+
 
 # set .vimrc
 echo -e "set autoindent
